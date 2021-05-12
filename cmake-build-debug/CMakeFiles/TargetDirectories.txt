@@ -1,0 +1,3 @@
+C:/Users/86181/OneDrive/code/C++/ARCchain/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/86181/OneDrive/code/C++/ARCchain/cmake-build-debug/CMakeFiles/ARCchain.dir
+C:/Users/86181/OneDrive/code/C++/ARCchain/cmake-build-debug/CMakeFiles/rebuild_cache.dir
