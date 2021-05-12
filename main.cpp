@@ -1,17 +1,19 @@
 //#include "pageReplace.h"
-const int MAX_PHY_PAGE = 64;
+#pragma GCC optimize(3)
+
+const int MAX_PHY_PAGE (64);
 //change
 #include <time.h>
 using namespace std;
-const int MAX_PAGE = 12;
-const int LRUGHOST_SIZE = 12;
-const int LFUGHOST_SIZE = LRUGHOST_SIZE;
+const int MAX_PAGE (12);
+const int LRUGHOST_SIZE (12);
+const int LFUGHOST_SIZE (LRUGHOST_SIZE);
 #define get_Page(x) (x>>MAX_PAGE)
-const int LRU = -1;
-const int LFU = 1;
+const int LRU (-1);
+const int LFU (1);
 #include <iostream>
 
-int p = MAX_PHY_PAGE / 2;
+int p (MAX_PHY_PAGE / 2);
 
 class Block {
 public:
@@ -41,13 +43,6 @@ GBlock::GBlock() {
     next = NULL;
 }
 
-//class EmptyPage {
-//public:
-//    int num;
-//    EmptyPage *next;
-//    EmptyPage()
-//};
-
 Block *LRUHead = new Block;
 Block *LRUTail = new Block;
 Block *LFUHead = new Block;
@@ -56,7 +51,6 @@ GBlock *LRUGHead = new GBlock;
 GBlock *LRUGTail = new GBlock;
 GBlock *LFUGHead = new GBlock;
 GBlock *LFUGTail = new GBlock;
-//EmptyPage *EmptyHead = new
 
 int LRUCnt;
 int LFUCnt;
@@ -64,14 +58,13 @@ int LRUGCnt;
 int LFUGCnt;
 int EmptyPage[64];
 
-int changeCapacity(int choice) {
+inline int changeCapacity(int choice) {
     p += choice;
     return 1;
 }
 
-int setEmptyPage(long *physic_memery,long vpage) {
-
-    for (int i = 0; i < MAX_PHY_PAGE; ++i) {
+inline int setEmptyPage(long *physic_memery,long vpage) {
+    for (register int i = 0; i < MAX_PHY_PAGE; ++i) {
         if (EmptyPage[i] == 0) {
             physic_memery[i] = vpage;
             EmptyPage[i] = 1;
@@ -81,7 +74,7 @@ int setEmptyPage(long *physic_memery,long vpage) {
     return -1;
 }
 
-void clearPhysic(int i,long *physic_memery) {
+inline void clearPhysic(int i) {
     EmptyPage[i] = 0;
 }
 
@@ -89,28 +82,28 @@ void removeListTail(int choice,Block *b) {
     if (choice == LRU) {
         b->pre->next = LRUTail;
         LRUTail->pre = b->pre;
-        LRUCnt--;
+        --LRUCnt;
         return;
     } else {
         b->pre->next = LFUTail;
         LFUTail->pre = b->pre;
-        LFUCnt--;
+        --LFUCnt;
         return;
     }
 }
 
-void removeGListTail(int choice,GBlock *gb) {
+inline void removeGListTail(int choice,GBlock *gb) {
     if (choice == LRU) {
         gb->pre->next = LRUGTail;
         LRUGTail->pre = gb->pre;
         delete gb;
-        LRUGCnt--;
+        --LRUGCnt;
         return;
     } else {
         gb->pre->next = LFUGTail;
         LFUGTail->pre = gb->pre;
         delete gb;
-        LFUGCnt--;
+        --LFUGCnt;
         return;
     }
 }
@@ -123,12 +116,12 @@ void removeListIn(int choice,Block *b) {
         } else if (b->pre == LRUHead) {
             b->next->pre = LRUHead;
             LRUHead->next = b->next;
-            LRUCnt--;
+            --LRUCnt;
             return;
         } else {
             b->pre->next = b->next;
             b->next->pre = b->pre;
-            LRUCnt--;
+            --LRUCnt;
             return;
         }
     } else {
@@ -138,12 +131,12 @@ void removeListIn(int choice,Block *b) {
         } else if (b->pre == LFUHead) {
             b->next->pre = LFUHead;
             LFUHead->next = b->next;
-            LFUCnt--;
+            --LFUCnt;
             return;
         } else {
             b->pre->next = b->next;
             b->next->pre = b->pre;
-            LFUCnt--;
+            --LFUCnt;
             return;
         }
     }
@@ -158,13 +151,13 @@ void removeGListIn(int choice,GBlock *gb) {
             gb->next->pre = LRUGHead;
             LRUGHead->next = gb->next;
             delete gb;
-            LRUGCnt--;
+            --LRUGCnt;
             return;
         } else {
             gb->pre->next = gb->next;
             gb->next->pre = gb->pre;
             delete gb;
-            LRUGCnt--;
+            --LRUGCnt;
             return;
         }
     } else {
@@ -175,19 +168,19 @@ void removeGListIn(int choice,GBlock *gb) {
             gb->next->pre = LFUGHead;
             LFUGHead->next = gb->next;
             delete gb;
-            LFUGCnt--;
+            --LFUGCnt;
             return;
         } else {
             gb->pre->next = gb->next;
             gb->next->pre = gb->pre;
             delete gb;
-            LFUGCnt--;
+            --LFUGCnt;
             return;
         }
     }
 }
 
-void getFront(Block *b) {
+inline void getFront(Block *b) {
     if (b->pre != LFUHead) {
         b->pre->next = b->next;
         b->next->pre = b->pre;
@@ -199,7 +192,7 @@ void getFront(Block *b) {
     return;
 }
 
-void freeGListTail(int choice) {
+inline void freeGListTail(int choice) {
     if (choice == LRU) {
         while (LRUGCnt > LRUGHOST_SIZE) {
             removeGListTail(LRU,LRUGTail->pre);
@@ -217,13 +210,13 @@ void insertListHead(int choice,Block *b) {
         b->next = LRUHead->next;
         LRUHead->next = b;
         b->pre = LRUHead;
-        LRUCnt++;
+        ++LRUCnt;
     } else {
         LFUHead->next->pre = b;
         b->next = LFUHead->next;
         LFUHead->next = b;
         b->pre = LFUHead;
-        LFUCnt++;
+        ++LFUCnt;
     }
     return;
 }
@@ -234,13 +227,13 @@ void insertGListHead(int choice,GBlock *gb) {
         gb->next = LRUGHead->next;
         LRUGHead->next = gb;
         gb->pre = LRUGHead;
-        LRUGCnt++;
+        ++LRUGCnt;
     } else {
         LFUGHead->next->pre = gb;
         gb->next = LFUGHead->next;
         LFUGHead->next = gb;
         gb->pre = LFUGHead;
-        LFUGCnt++;
+        ++LFUGCnt;
     }
     return;
 }
@@ -250,7 +243,7 @@ void freeListTail(int choice,long *physic_memery) {
     GBlock *replacedGhost = new GBlock();
     if (choice == LRU) {
         replaced = LRUTail->pre;
-        clearPhysic(replaced->ppage,physic_memery);
+        clearPhysic(replaced->ppage);
         replacedGhost->vpage = replaced->vpage;
         removeListTail(LRU,replaced);
         delete replaced;
@@ -258,7 +251,7 @@ void freeListTail(int choice,long *physic_memery) {
         freeGListTail(LRU);
     } else {
         replaced = LFUTail->pre;
-        clearPhysic(replaced->ppage,physic_memery);
+        clearPhysic(replaced->ppage);
         replacedGhost->vpage = replaced->vpage;
         removeListTail(LFU,replaced);
         delete replaced;
@@ -285,8 +278,7 @@ void pageReplace(long * physic_memery, long nwAdd) {
     }
     first = 1;
     long page = get_Page(nwAdd);
-    Block *bptr;
-    GBlock *gbptr;
+    register Block *bptr;
     for (bptr = LRUHead; bptr->next != LRUTail;) {
         bptr = bptr->next;
         if (bptr->vpage == page) {
@@ -311,6 +303,7 @@ void pageReplace(long * physic_memery, long nwAdd) {
             return;
         }
     }
+    register GBlock *gbptr;
     bptr = new Block;
     bptr->vpage = page;
     for (gbptr = LRUGHead; gbptr->next != LRUGTail;) {
@@ -409,7 +402,6 @@ int main() {
             cout<<"WAWAWAWAWAWAWAWAWAWAWAWAWAWA not in CACHE!!! END";
             return 0;
         }
-
     }
     cout << "time cost: " << duration << endl;
     return 0;
