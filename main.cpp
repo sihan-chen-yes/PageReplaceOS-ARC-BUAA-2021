@@ -7,8 +7,8 @@ const int MAX_PAGE = 12;
 const int LRUGHOST_SIZE = 12;
 const int LFUGHOST_SIZE = LRUGHOST_SIZE;
 #define get_Page(x) (x>>MAX_PAGE)
-#define LRU -1
-#define LFU 1
+const int LRU = -1;
+const int LFU = 1;
 #include <iostream>
 
 int p = MAX_PHY_PAGE / 2;
