@@ -6,7 +6,7 @@ const int MAX_PHY_PAGE (64);
 #include <time.h>
 using namespace std;
 const int MAX_PAGE (12);
-const int LRUGHOST_SIZE (12);
+const int LRUGHOST_SIZE (32);
 const int LFUGHOST_SIZE (LRUGHOST_SIZE);
 #define get_Page(x) (x>>MAX_PAGE)
 const int LRU (-1);
