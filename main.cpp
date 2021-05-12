@@ -1,19 +1,18 @@
 //#include "pageReplace.h"
-#define MAX_PHY_PAGE 64
+const int MAX_PHY_PAGE = 64;
 //change
 #include <time.h>
 using namespace std;
-#define MAX_PAGE 12
-#define LRUGHOST_SIZE MAX_PHY_PAGE / 2
-#define LFUGHOST_SIZE MAX_PHY_PAGE / 2
+const int MAX_PAGE = 12;
+const int LRUGHOST_SIZE = 12;
+const int LFUGHOST_SIZE = LRUGHOST_SIZE;
 #define get_Page(x) (x>>MAX_PAGE)
 #define LRU -1
 #define LFU 1
 #include <iostream>
 
 int p = MAX_PHY_PAGE / 2;
-//change !!
-int fault = 0;
+
 class Block {
 public:
     long vpage;
@@ -67,15 +66,11 @@ int EmptyPage[64];
 
 int changeCapacity(int choice) {
     p += choice;
-    if (p > MAX_PHY_PAGE || p < 0) {
-        printf("pmove WAWAWAWA%d",p);
-    }
     return 1;
 }
 
 int setEmptyPage(long *physic_memery,long vpage) {
-    //change !!!!!!!!!
-    fault++;
+
     for (int i = 0; i < MAX_PHY_PAGE; ++i) {
         if (EmptyPage[i] == 0) {
             physic_memery[i] = vpage;
@@ -83,7 +78,6 @@ int setEmptyPage(long *physic_memery,long vpage) {
             return i;
         }
     }
-    printf("alloc WA!\n");
     return -1;
 }
 
@@ -284,7 +278,6 @@ void init() {
     LFUGTail->pre = LFUGHead;
 }
 
-int WA = 0;
 void pageReplace(long * physic_memery, long nwAdd) {
     static int first = 0;
     if (first == 0) {
@@ -384,11 +377,10 @@ void pageReplace(long * physic_memery, long nwAdd) {
 }
 
 
-long test[1700000];
+long test[10000000];
 int main() {
-    //change !!!
     long pm[MAX_PHY_PAGE] = {0};
-    int find = 0;
+    int find;
     long num;
     int loop;
     int i = 0;
@@ -401,14 +393,9 @@ int main() {
     for (int i = 0; i < loop; ++i) {
         long page = test[i];
         long vpage = get_Page(page);
-        start = clock();
         find = 0;
+        start = clock();
         pageReplace(pm,page);
-//        printf("%d\n",i);
-        if (WA == 1) {
-            printf("%d",i);
-            return 1;
-        }
         end = clock();
         duration += (end - start);
         for (int j = 0; j < MAX_PHY_PAGE; ++j) {
@@ -422,26 +409,8 @@ int main() {
             cout<<"WAWAWAWAWAWAWAWAWAWAWAWAWAWA not in CACHE!!! END";
             return 0;
         }
-//        if ()
-//        printf("the %d is :\n",i + 1);
-//        for (int j = 0; j < LRUGList.size(); ++j) {
-//            printf("%d ",LRUGList.at(j));
-//        }
-//        printf("\n");
-//        for (int j = 0; j < LRUList.size(); ++j) {
-//            printf("%d ",LRUList.at(j).vpage);
-//        }
-//        printf("\n");
-//        for (int j = 0; j < LFUList.size(); ++j) {
-//            printf("%d ",LFUList.at(j).vpage);
-//        }
-//        printf("\n");
-//        for (int j = 0; j < LFUGList.size(); ++j) {
-//            printf("%d ",LFUGList.at(j));
-//        }
-//        printf("\n");
+
     }
     cout << "time cost: " << duration << endl;
-    printf("%d : now the fault is %d\n",loop,fault);
     return 0;
 }
