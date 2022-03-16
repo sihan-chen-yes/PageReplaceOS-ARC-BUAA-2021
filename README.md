@@ -1,5 +1,7 @@
 # pageReplaceOS
-ARC
-2021OS页面置换
-ARC && C++优化
-最终rank:perf->1 time->10+
+2021_OS页面置换,采用ARC算法，通过C++实现，并进行了优化。  
+  
+最终rank: 利用linux系统下指令perf进行评测  
+指令数rank:1  
+
+执行时间:10
